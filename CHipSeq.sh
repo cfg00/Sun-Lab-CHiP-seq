@@ -16,6 +16,8 @@ paired=0
 pair1="_1"
 pair2="_2"
 
+hFlag = 0
+
 threadFlag=0
 threads=0
 qReport=0
@@ -87,6 +89,12 @@ do
 			trim=1
 		fi
 
+		#adding homer flag
+		if [[ "$var" == "-h"* ]]
+		then
+			hFlag=1
+		fi
+
 	elif [[ $pFlag == 1 ]]
 	then
 		pFlag=2
@@ -117,7 +125,7 @@ then
 
 		for filename in *.fq.gz
 		do
-			if [ ! -f "${filename.fq%.*}" ]
+			if [ ! -f "${filename%.*}.fq" ]
 			then
 				echo "unzipping $filename"
 				gzip -dc $filename
@@ -146,7 +154,7 @@ then
 	done
 	for filename in *.fq.gz
 	do
-		if [ ! -f "${filename.fq%.*}" ]
+		if [ ! -f "${filename%.*}.fq" ]
 		then
 			echo "unzipping $filename"
 			gzip -dc $filename
@@ -228,13 +236,53 @@ then
 		read1 = $filename
 		read2 = "${filename%${pair1}.fq}${pair2}.fq"
 
-		bwa mem -t $threads ${rsd}/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna $read1 $read2 | samtools view -bS > ${base}.bam
+		bwa mem -t $threads ${rsd}/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna $read1 $read2 | samtools view -bS > ${oDir%/}${base}.bam
 		
 
     #bwa mem -t 6 /datasets/cs185-sp22-a00-public/genomes/GRCm38.fa /datasets/cs185-sp22-a00-public/lab4/${prefix}.esc.fastq | samtools view -bS > ${prefix}.bam
 	done
-	## next step is to add sequence
+	## next step is to add Peak finds, using homer
+
+	
 
 
 fi 
 
+##how to do it: add command argument i.e -h (run homer) 
+#also add bedGraph(done), findPeaks, PeakAnnotations (Q4), find motifs
+#merge Peaks
+
+if [[ $hFlag != 0 ]] 
+then
+	cd $fqDir
+	cd $oDir
+	#this loop makes the tag directories, using HOMER
+	
+	mkdir "tagDirectory"
+	chmod -R 0777 "tagDirectory" #no crash
+	for file in *.bam
+	do
+		echo "making tag directory for $file" 
+		makeTagDirectory "tagDirectory/${file%.bam}" file
+
+		echo "making the bedGraph for $file"
+		makeUCSDfile "tagDirectory/${file}" -o auto
+
+		
+
+
+
+	done
+	#TAG DIRECTORIES FINISHED
+	#bedGraph FILES FINISHED :D
+
+
+	##start bedGraph process:
+	#for prefix in Oct4 Klf4 Sox2 H3K27ac H3K4me2
+	#do
+    #makeUCSCfile ~/lab4-spring22/tagdirs/${prefix} -o auto
+	#done
+
+	
+
+fi
