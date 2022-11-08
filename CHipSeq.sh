@@ -16,7 +16,17 @@ paired=0
 pair1="_1"
 pair2="_2"
 
+#homer flag
 hFlag = 0
+
+#findPeaks flag
+fpFlag = 0
+
+#findPeaks Histone flag
+histFlag = 0
+histName = ""
+#findPeaks TF flag
+transFlag = 0
 
 threadFlag=0
 threads=0
@@ -46,6 +56,12 @@ do
 	then
 		threadFlag=0
 		threads=$var
+	#adding the varname to histName
+	elif [[ $histFlag == 1 ]]
+	then
+		histFlag=0
+		histName=$var
+	
 	elif [[ "$var" == "-"* ]]
 	then
 		if [[ "$var" == *"-a"* ]]
@@ -94,6 +110,33 @@ do
 		then
 			hFlag=1
 		fi
+
+		#adding FindPeaks flag
+
+		if [[ "$var" == "-FP"* ]]
+		then
+			fpFlag = 1
+		fi
+
+		#adding Findpeaks sub flags
+
+		#transcription factors
+		if [[ "$var" == "-tf"* ]]
+		then
+			transFlag = 1
+		fi
+
+		#histone modifications
+		if [[ "$var" == "-hist"* ]]
+		then
+			histFlag = 1
+		fi
+
+
+
+
+
+
 
 	elif [[ $pFlag == 1 ]]
 	then
@@ -268,13 +311,48 @@ then
 		echo "making the bedGraph for $file"
 		makeUCSDfile "tagDirectory/${file}" -o auto
 
-		
+		if [[$fpFlag != 0 ]]
+		then
+			if [[$histFlag != 0 ]]
+			then
+			#this is where the findPeaks w/ hist will be run, gotta loop through the file
+			
+			for line in *_h.txt
+			do
+				#unsure wether to add i or not...
+				findPeaks ~/tagDirectory/${line} -i ~/lab4-spring22/tagdirs/input -style histone -o 
+
+			done
+			
+
+			fi
+
+			if [[$transFlag != 0 ]]
+			then
+			#this is where the findPeaks w/ TF will be run
+			
+			for line in *_tf.txt
+			do
+				#again, not sure wether to add -i or not, ask later
+				   findPeaks ~/tagDirectory/${line} -i ~/lab4-spring22/tagdirs/input -style factor -o auto
+
+			done
+
+
+			fi
+
+		fi
 
 
 
 	done
+
+	
 	#TAG DIRECTORIES FINISHED
 	#bedGraph FILES FINISHED :D
+	#Making FindPeaks thing.
+
+	#loop through TF file and HM file
 
 
 	##start bedGraph process:
@@ -282,7 +360,4 @@ then
 	#do
     #makeUCSCfile ~/lab4-spring22/tagdirs/${prefix} -o auto
 	#done
-
-	
-
 fi
