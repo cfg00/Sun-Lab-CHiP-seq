@@ -56,7 +56,7 @@ do
 	then
 		threadFlag=0
 		threads=$var
-	#adding the varname to histName
+	#adding the varname to histName, this is the part that confused me
 	elif [[ $histFlag == 1 ]]
 	then
 		histFlag=0
@@ -313,6 +313,7 @@ then
 
 		if [[$fpFlag != 0 ]]
 		then
+			##still confused about this flag loooool
 			if [[$histFlag != 0 ]]
 			then
 			#this is where the findPeaks w/ hist will be run, gotta loop through the file
@@ -320,7 +321,8 @@ then
 			for line in *_h.txt
 			do
 				#unsure wether to add i or not...
-				findPeaks ~/tagDirectory/${line} -i ~/lab4-spring22/tagdirs/input -style histone -o 
+				#-i ~/lab4-spring22/tagdirs/input
+				findPeaks ~/tagDirectory/${line} -i ~/tagDirectory/control -style histone -o auto
 
 			done
 			
@@ -334,12 +336,32 @@ then
 			for line in *_tf.txt
 			do
 				#again, not sure wether to add -i or not, ask later
-				   findPeaks ~/tagDirectory/${line} -i ~/lab4-spring22/tagdirs/input -style factor -o auto
+				# 
+				   findPeaks ~/tagDirectory/${line} -i ~/tagDirectory/control -style factor -o auto
 
 			done
 
 
 			fi
+
+			if ! [ -d refGen ] #checks if it a folder named this exits
+			then
+			mkdir refGen
+			fi
+			cd refGen
+			if ! [ -f GCF_000001405.40_GRCh38.p14_genomic.fna ]
+			then
+			if ! [ -f GCF_000001405.40_GRCh38.p14_genomic.fna.gz ]
+			then
+			wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.fna.gz
+			fi
+			gzip -d GCF_000001405.40_GRCh38.p14_genomic.fna.gz
+
+			#by this point you have a reference genome called whatever that is ^
+
+			#
+
+		
 
 		fi
 
@@ -349,8 +371,10 @@ then
 
 	
 	#TAG DIRECTORIES FINISHED
-	#bedGraph FILES FINISHED :D
+	#bedGraph FILES FINISHED 
 	#Making FindPeaks thing.
+	#done with FindPeaks 11/16/2022 i think.
+
 
 	#loop through TF file and HM file
 
