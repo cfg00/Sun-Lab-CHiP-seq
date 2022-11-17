@@ -61,6 +61,13 @@ do
 	then
 		histFlag=0
 		histName=$var
+		IFS=$'\n' read -d '' -r -a histones_list < $var
+
+	elif [[ $transFlag == 1 ]]
+	then
+		transFlag=0
+		histName=$var
+		IFS=$'\n' read -d '' -r -a tf_list < $var
 	
 	elif [[ "$var" == "-"* ]]
 	then
@@ -106,7 +113,7 @@ do
 		fi
 
 		#adding homer flag
-		if [[ "$var" == "-h"* ]]
+		if [[ "$var" == "-H"* ]]
 		then
 			hFlag=1
 		fi
@@ -311,18 +318,22 @@ then
 		echo "making the bedGraph for $file"
 		makeUCSDfile "tagDirectory/${file}" -o auto
 
+		
+
 		if [[$fpFlag != 0 ]]
 		then
 			##still confused about this flag loooool
 			if [[$histFlag != 0 ]]
 			then
-			#this is where the findPeaks w/ hist will be run, gotta loop through the file
+			#this is where the findPeaks w/ hist will be run, make a list for histones.
+			#IFS=$'\n' read -d '' -r -a histones_list < /etc/passwd
 			
-			for line in *_h.txt
+			for line in histones_list
 			do
 				#unsure wether to add i or not...
 				#-i ~/lab4-spring22/tagdirs/input
 				findPeaks ~/tagDirectory/${line} -i ~/tagDirectory/control -style histone -o auto
+				
 
 			done
 			
@@ -333,18 +344,19 @@ then
 			then
 			#this is where the findPeaks w/ TF will be run
 			
-			for line in *_tf.txt
+			for line in tf_list
 			do
 				#again, not sure wether to add -i or not, ask later
 				# 
 				   findPeaks ~/tagDirectory/${line} -i ~/tagDirectory/control -style factor -o auto
+				   names+=$line
 
 			done
 
 
 			fi
 
-			if ! [ -d refGen ] #checks if it a folder named this exits
+			if ! [ -d refGen ] #checks if it a folder named this exits, might change the name 
 			then
 			mkdir refGen
 			fi
@@ -358,8 +370,20 @@ then
 			gzip -d GCF_000001405.40_GRCh38.p14_genomic.fna.gz
 
 			#by this point you have a reference genome called whatever that is ^
+			#Make a list with the variable names
 
-			#
+			
+
+		#	annotatePeaks.pl tss \
+ 		#	/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna \
+  		#	-size 8000 \
+  		#	-hist 10 \
+  		#	-d ~/lab4/tagdirs/Oct4 ~/lab4/tagdirs/Sox2 ~/lab4/tagdirs/Klf4 ~/lab4/tagdirs/H3K4me2 ~/lab4/tagdirs/H3K27ac \
+  		#	-gtf /datasets/cs185-sp22-a00-public/genomes/GRCm38.75.gtf > ~/lab4/annotations/tss_histogram.txt
+
+		annotatePeaks.pl 
+
+			
 
 		
 
