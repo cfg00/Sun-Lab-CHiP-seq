@@ -381,7 +381,7 @@ then
   		#	-d ~/lab4/tagdirs/Oct4 ~/lab4/tagdirs/Sox2 ~/lab4/tagdirs/Klf4 ~/lab4/tagdirs/H3K4me2 ~/lab4/tagdirs/H3K27ac \
   		#	-gtf /datasets/cs185-sp22-a00-public/genomes/GRCm38.75.gtf > ~/lab4/annotations/tss_histogram.txt
 
-		annotatePeaks.pl 
+		#annotatePeaks.pl 
 
 			
 
