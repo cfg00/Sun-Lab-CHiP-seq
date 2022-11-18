@@ -383,6 +383,26 @@ then
 
 		#annotatePeaks.pl 
 
+		cmdstring = ""
+		buffer= "~/tagDirectory/"
+
+		for ELEMENT in ${histones_list[@]}; do
+  		cmdstring+="${placeholder}"
+ 	    cmdstring+="${ELEMENT} "
+		done
+
+		for line in ${tf_list[@]}; do
+   		 cmdstring+="${placeholder}"
+    	 buffer+="${line} "
+		done
+		
+		annotatePeaks.pl tss\
+		/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna \
+		-size 8000 \
+		-hist 10 \
+		-d $cmdstring \
+		-gtf /refGen/GCF_000001405.40_GRCh38.p14_genomic.fna > ~/tagDirectory
+
 			
 
 		
