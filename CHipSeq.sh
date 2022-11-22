@@ -396,16 +396,40 @@ then
     	 buffer+="${line} "
 		done
 		
+		#annotating peaks lol
 		annotatePeaks.pl tss\
 		/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna \
 		-size 8000 \
 		-hist 10 \
 		-d $cmdstring \
-		-gtf /refGen/GCF_000001405.40_GRCh38.p14_genomic.fna > ~/tagDirectory
+		-gtf /refGen/GCF_000001405.40_GRCh38.p14_genomic.gtf > ~/tagDirectory/annotations/annotated_output.txt
 
 			
+		#now we find motifs :D
+		#prefix=Oct4
+		#findMotifsGenome.pl \
+ 		#~/lab4/tagdirs/${prefix}/peaks.txt \
+ 		#/datasets/cs185-sp22-a00-public/genomes/GRCm38.fa \
+ 		#~/lab4/motifs/${prefix} \
+ 		#-mask -size 100
 
+		for hist in ${histones_list[@]};
+		do
+   		findMotifsGenome.pl \
+		~/tagDirectory/${hist}/annotated_output.txt \
+		/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna \
+		/motifs/${hist} \
+		-mask -size 100
+		done
 		
+		for trf in ${tf_list[@]};
+		do
+   		findMotifsGenome.pl \
+		~/tagDirectory/${trf}/annotated_output.txt \
+		/refGen/GCF_000001405.40_GRCh38.p14_genomic.fna \
+		/motifs/${trf} \
+		-mask -size 100
+		done
 
 		fi
 
@@ -418,6 +442,7 @@ then
 	#bedGraph FILES FINISHED 
 	#Making FindPeaks thing.
 	#done with FindPeaks 11/16/2022 i think.
+	#added find motifs
 
 
 	#loop through TF file and HM file
