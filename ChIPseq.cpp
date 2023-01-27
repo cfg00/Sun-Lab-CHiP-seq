@@ -274,10 +274,35 @@ int main(int argc, char** argv)
 		command += (std::string)"align.sh -r " + std::to_string(readLength) + (std::string)" -p " + pair1 + (std::string)" " + pair2 + " -o " + (std::string)oDir;
 		/*
 		Todo produce align.sh
+		*/ 
+		/*done
+		
 		*/
 	}
+	//make tag directories for every file presented
+	if(true){
+		//makeTagDirectory <output directory> <input BAM File>
+	}
 
+	//Visualizing the data w IGV:
 
+	if(true){
+		//i need arg 1 and arg 2 to be made available, so I can actually run this
+	string command3 = "python makeUCSCfile.py " + arg1 + " " + arg2;
+	const char * com3 = command3.c_str();
+	system(com3);
+	}
+
+	//Identifying binding sites:
+		//find peaks <tag directory> -i <control tag> - style
+		//post2bed.pl peaks.txt > <>.peaks.bed
+
+	//visualizing binding patterns
+	if(true){
+		string command4 = "findpeaks "+ tagDir+ "-i " + controlTag + "-style " + <h or f> + "-o auto";
+
+		string command5 = "pos2bed.pl" + peaks.txt > oct4.peaks.bed;
+	}
 
 
 	
